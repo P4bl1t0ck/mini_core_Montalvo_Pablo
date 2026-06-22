@@ -15,11 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        /*Con esto llamamos a las funciones dentro de los Seeders, que hacen referencia a los factorys
+        , y podemos mecanizar la creacion de datos. */    
+        $this->call([
+            RepartidorSeeder::class,
+            ZonaSeeder::class,
+            EnvioSeeder::class 
         ]);
     }
 }

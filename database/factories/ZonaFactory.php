@@ -18,7 +18,13 @@ class ZonaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+
+        'nombre_zona'=>$this->faker->randomElement([
+            'Norte',
+            'Sur',
+            'Centro'
+        ]),
+            'tarifa_por_kg'=>$this->faker->randomFloat(2,1,5)
         ];
     }
 }

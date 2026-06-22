@@ -18,7 +18,9 @@ class RepartidorFactory extends Factory
     public function definition(): array
     {
         return [
-            
+            //Los seeders ayudan para llenar la tabla, segun estos parametros
+            'nombre'=>$this->faker->name(),
+            'email'=>$this->faker->safeEmail()
         ];
     }
 }
