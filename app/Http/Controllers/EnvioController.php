@@ -3,17 +3,64 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models;
+use App\Models\Envio;
 
 class EnvioController extends Controller
 {
-    //En comparacion con MongoDb este es nuestro showall()
-    public function index(){
-        return view('Envios.envio');
+    public function index()
+    {
+        return view('Envios.index');
     }
 
-    //Este es nuestra funcion calcular que hara lo de multiplicar el peso, por el precio
-    public function calcular(){
-        
+    public function calcular(Request $request)
+    {
+        $envios = Envio::with([
+            'repartidor',
+            'zona'
+        ])
+        ->whereBetween(
+            'fecha_envio',
+            [
+                $request->fecha_inicio,
+                $request->fecha_fin
+            ]
+        )
+        ->get();
+
+        $resultados = $envios
+        ->groupBy('id_repartidor')
+        ->map(function ($grupo)
+        {
+
+            return [
+
+                'nombre' =>
+                    $grupo->first()
+                    ->repartidor
+                    ->nombre,
+
+                'cantidad_envios' =>
+                    $grupo->count(),
+
+                'total_kg' =>
+                    $grupo->sum('peso_kg'),
+
+                'costo_total' =>
+                    $grupo->sum(
+                        fn($envio) =>
+                        $envio->peso_kg *
+                        $envio->zona->tarifa_por_kg
+                    )
+
+            ];
+
+        });
+
+        return view(
+            'Envios.envio',
+            [
+                'resultados' => $resultados
+            ]
+        );
     }
 }
