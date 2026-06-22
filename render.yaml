@@ -19,7 +19,7 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
-      - key: APP_KEY
+      - key: IS0cEdO+Oj3KJqevxizKVF7BA8uO6uCdhxRrEtaKFJA=
         sync: false
       - key: DB_CONNECTION
         value: sqlite
