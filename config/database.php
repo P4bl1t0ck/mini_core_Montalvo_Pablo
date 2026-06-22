@@ -182,3 +182,6 @@ return [
     ],
 
 ];
+
+DB_CONNECTION=sqlite
+ #DB_DATABASE= (database\database.sqlite)

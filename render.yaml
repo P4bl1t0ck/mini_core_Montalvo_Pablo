@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: mvc-logistica-laravel
+    env: php
+    plan: free
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+    startCommand: |
+      # 1. Crear el archivo sqlite en el disco persistente si no existe
+      mkdir -p /var/data
+      touch /var/data/database.sqlite
+      # 2. Correr migraciones y seeders automáticamente
+      php artisan migrate --force --seed
+      # 3. Iniciar el servidor de Laravel (Render usa Apache/Nginx internamente para PHP)
+      apache2-foreground
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false # Render te pedirá generar una en su panel
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: /var/data/database.sqlite # Aquí vive tu BD persistente
+      - key: LOG_CHANNEL
+        value: stderr
+    disk:
+      name: sqlite-storage
+      mountPath: /var/data
+      sizeGB: 1
