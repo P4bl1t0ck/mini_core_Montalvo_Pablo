@@ -1,7 +1,7 @@
 services:
   - type: web
     name: mvc-logistica-laravel
-    env: php
+    runtime: php # Corrección del entorno para Render
     plan: free
     buildCommand: |
       composer install --no-dev --optimize-autoloader
@@ -9,9 +9,7 @@ services:
       php artisan route:cache
       php artisan view:cache
     startCommand: |
-      # Creamos la base de datos limpia en la ruta por defecto de Laravel
       touch database/database.sqlite
-      # Ejecutamos las migraciones y los seeders automáticos al arrancar
       php artisan migrate --force --seed
       apache2-foreground
     envVars:
@@ -19,8 +17,8 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
-      - key: IS0cEdO+Oj3KJqevxizKVF7BA8uO6uCdhxRrEtaKFJA=
-        sync: false
+      - key: APP_KEY
+        sync: false # ASÍ ES CORRECTO: Le dice a Render que te pida el valor largo en su página web
       - key: DB_CONNECTION
         value: sqlite
       - key: LOG_CHANNEL
